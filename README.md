@@ -156,6 +156,6 @@ Contributions are very welcome.
 
 ## License
 
-Distributed under the terms of the [MIT](http://opensource.org/licenses/MIT) license, "pytest-android" is free and open source software.
+Distributed under the terms of the [MIT](LICENSE) license, "pytest-android" is free and open source software.
 
-根据[MIT](http://opensource.org/licenses/MIT)许可条款分发，“pytest-android”是免费的开源软件。
+根据[MIT](LICENSE)许可条款分发，“pytest-android”是免费的开源软件。
