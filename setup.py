@@ -17,6 +17,7 @@ setup(
     url='https://github.com/edsion1107/pytest-android',
     description='This fixture provides a configured "driver" for Android Automated Testing, using uiautomator2.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     python_requires='~=3.6',
     install_requires=['pytest', 'pytest-variables'],
     setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
