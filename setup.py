@@ -14,7 +14,6 @@ def read(fname):
 setup(
     name='pytest-android',
     use_scm_version=True,
-    version='2019.1.1a0',
     author='edsion',
     author_email='edsion@i1hao.com',
     maintainer='edsion',
