@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import codecs
 from setuptools import setup
 
-
-def read(fname):
-    file_path = os.path.join(os.path.dirname(__file__), fname)
-    return codecs.open(file_path, encoding='utf-8').read()
-
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name='pytest-android',
@@ -21,7 +16,7 @@ setup(
     license='MIT',
     url='https://github.com/edsion1107/pytest-android',
     description='This fixture provides a configured "driver" for Android Automated Testing, using uiautomator2.',
-    long_description=read('README.md'),
+    long_description=long_description,
     python_requires='~=3.6',
     install_requires=['pytest', 'pytest-variables'],
     setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
