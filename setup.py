@@ -13,6 +13,7 @@ def read(fname):
 
 setup(
     name='pytest-android',
+    use_scm_version=True,
     version='2019.1.1a0',
     author='edsion',
     author_email='edsion@i1hao.com',
@@ -24,6 +25,7 @@ setup(
     long_description=read('README.md'),
     python_requires='~=3.6',
     install_requires=['pytest', 'pytest-variables'],
+    setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
     extras_require={
         'hjson': ['hjson'],
         'yaml': ['PyYAML'],
