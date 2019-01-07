@@ -52,7 +52,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'android = pytest_android',
+            'android = pytest_android.__init__',
         ],
     },
 )
