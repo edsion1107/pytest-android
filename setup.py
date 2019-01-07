@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -9,6 +9,7 @@ with open("README.md", "r") as fh:
 setup(
     name='pytest-android',
     use_scm_version=True,
+    packages=find_packages(),
     author='edsion',
     author_email='edsion@i1hao.com',
     maintainer='edsion',
@@ -31,7 +32,6 @@ setup(
         'weditor': ['weditor'],
 
     },
-    package_dir={'': 'src'},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Pytest',
@@ -52,7 +52,8 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'android = pytest_android.__init__',
+            # 格式：插件名=模块名，插件名可以用'-',python的模块则用'_'
+            'pytest-android = pytest_android',
         ],
     },
 )
