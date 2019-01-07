@@ -9,7 +9,8 @@ with open("README.md", "r") as fh:
 setup(
     name='pytest-android',
     use_scm_version=True,
-    packages=find_packages(),
+    packages=['pytest_android'],
+    package_dir={"": "src"},
     author='edsion',
     author_email='edsion@i1hao.com',
     maintainer='edsion',
