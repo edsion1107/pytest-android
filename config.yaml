@@ -1,0 +1,32 @@
+%YAML 1.2
+---
+# 配置文件是通过 pytest-variables 插件加载的
+# 通过命令`--variables file`加载yaml或hjson文件。注意，如果同时指定多个配置文件，会自动进行合并。
+
+# 全局配置
+uiautomator2: # https://github.com/openatx/uiautomator2#global-settings
+  click_post_delay: 1   # 点击延迟，保证截图正确或者网络问题
+  wait_timeout: 10    # 等待控件出现的最长时间
+  # UiAutomator中的超时设置(隐藏方法)，轻易不要修改
+  #  Configurator:
+  #    actionAcknowledgmentTimeout: 500
+  #    keyInjectionDelay: 0
+  #    scrollAcknowledgmentTimeout: 200
+  #    waitForIdleTimeout: 0
+  #    waitForSelectorTimeout: 0
+  auto_screenshot: true
+
+
+# 启动时使用的包名
+package_name: com.tencent.qqmusic
+# 启动使用的Activity
+MainActivity: .activity.AppStarterActivity
+# （示例）进入播放器后延迟时间，以保证截图正确。推荐5S以上
+play_delay: 5
+
+
+# 设备连接参数
+device:
+  # 优先使用有线连接（usb），无效时改为无线
+  serial:     # usb 连接使用的设备标识，获取命令：`adb devices`。如果留空，则连接任意设备。
+  addr: 10.81.53.156    # 无线连接使用的地址，可以使用ip或ip+端口(默认7912)，查看的命令`adb shell netcfg`

@@ -11,14 +11,14 @@ pytest-android 是 [pytest](http://pytest.org/) 的插件，它通过 [uiautomat
 ## 功能
 
 - 整合 [uiautomator2](https://github.com/openatx/uiautomator2)，实现基于控件的自动化测试
-- 借助 [allure](https://github.com/allure-framework/allure-python) 生成测试报告
 - 依赖 [pytest-variables](https://github.com/pytest-dev/pytest-variables) 实现参数化配置
+- 借助 [allure](https://github.com/allure-framework/allure-python) 生成测试报告
 - 借助 hook 机制，实现“点击、滑动时自动截图”、“异常时自动抓取控件信息和截图”等 fixture，减少重复工作
 - 通过安装 pytest 插件，实现诸如“失败重试”、“分布式执行”、“用例分层”等
 
 
 
-## 依赖
+## 安装
 
 **强烈建议** 使用 git 对代码进行版本控制，灵活运用分支开发的策略，并且将自动化整合进 DevOps 流程中。
 
@@ -32,33 +32,18 @@ macOS、linux可以通过 [pyenv](https://github.com/pyenv/pyenv) 实现多个 
 
 > 因为使用了 python 3.6 的 [f-string](https://realpython.com/python-f-strings/) 特性，所以建议的 python 版本大于等于3.6。
 
-> 因为 [uiautomator2](https://github.com/openatx/uiautomator2) 的某些依赖库目前还不支持python 3.7，所以当前 python 版本需要小于 3.7。
-
 具体安装过程略。
 
-### 2. 安装依赖模块
-
-你可以直接通过`pip`命令安装:
+### 2. 创建工程
 
 ```bash
-pip install pytest>=4.0         # 必须
-pip install pytest-variables    # 必须
-
-# 必须，根据你选择的配置文件格式，二选一
-pip install PyYAML    # 推荐
-pip install hjson
-
-pip install uiautomator2>=0.1.7    # 必须（目前支持的驱动框架，后续可能还会添加Appium）
-pipenv install weditor		# 必须，uiautomator2 配套的录制工具
-
-pip install pillow    # 可选，如果使用“自动截图”功能，需要通过此模块为截图添加“水印“
-pip install allure-pytest		# 可选，使用allure生成报告
-pipenv install pytest-rerunfailures		# 可选，使 pytest 支持失败重试
+mkdir demo
+cd demo
 ```
 
+### 3. 安装插件和一些可选模块
 
-
-也可以使用`pipenv`进行安装（推荐）：
+推荐使用 [pipenv](https://github.com/pypa/pipenv) 进行环境管理：
 
 ```bash
 # macOS
@@ -66,50 +51,28 @@ brew install pipenv
 # windows,linux
 pip install --user pipenv
 
-pipenv install pytest>=4.0         # 必须
-pipenv install pytest-variables    # 必须
-
-# 必须，根据你选择的配置文件格式，二选一
+pipenv install pytest-android       # 必须(自动安装依赖模块 pytest 和 pytest-variables)
+pipenv install uiautomator2>=0.1.7    # 必须，目前支持的驱动框架，后续可能还会添加 Appium 
+# 必须，pytest-variables支持的配置文件格式，二选一即可
 pipenv install PyYAML    # 推荐
 pipenv install hjson
 
-pipenv install uiautomator2>=0.1.7    # 必须，目前支持的驱动框架，后续可能还会添加 Appium 
-pipenv install weditor		# 必须，uiautomator2 配套的录制工具
 
-pipenv install pillow    # 可选，如果使用“自动截图”功能，需要通过此模块为截图添加“水印“
-pipenv install allure-pytest		# 可选，使用 allure 生成报告
-pipenv install pytest-rerunfailures		# 可选，使 pytest 支持失败重试
-```
-
-
-
-## 安装
-
-直接通过`pip`命令安装：
-
-```bash
-pip install pytest-android
-```
-
-
-
-通过`pipenv`安装：
-
-```bash
-pipenv install pytest-android
+# 以下为可选模块，根据需要选择性安装
+pipenv install --dev weditor		# uiautomator2 配套的录制工具
+pipenv install allure-pytest pillow		# 使用 allure 生成报告
+pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 ```
 
 
 
 ## 使用
 
-### 1. 配置文件
+### 1. 创建配置文件
 
 #### 1.1 config.yaml
 
-TODO：参考的配置文件例子`config.yaml`，链接或内容，待补充
-
-创建项目级配置文件，参考`config.yaml`。此文件可以使用 yaml 和 hjson 格式（由 pytest-variables 插件实现），文件名任意（在下一步中指定）。
+创建项目级配置文件，参考 [config.yaml](https://raw.githubusercontent.com/edsion1107/pytest-android/master/config.yaml)。此文件可以使用 yaml 和 hjson 格式（由 pytest-variables 插件实现），文件名任意。
 
 配置文件可以同时指定多个（遇到相同字段，后面的会覆盖前面的），借助此功能可以实现：指定设备参数、实现复杂情况下的兼容性测试等。
 
@@ -131,7 +94,11 @@ TODO：参考的配置文件例子`config.yaml`，链接或内容，待补充
 
 
 
-### 2. Fixtures
+这里是一份 [pytest.ini](https://raw.githubusercontent.com/edsion1107/pytest-android/master/pytest.ini) 的示例。
+
+### 2. 编写用例
+
+#### 2.1 可用的Fixtures
 
 此处文档可能更新不及时，通过执行命令`python -m pytest --fixtures`，可以列出所有 fixtures 及其最新说明文档。
 
@@ -142,9 +109,31 @@ TODO：参考的配置文件例子`config.yaml`，链接或内容，待补充
 | app_start      | function |  True   | 启动 app ，（仅）通过当前 app 包名判断是否启动               |
 | app_stop       | function |  True   | 每条 case 结束自动 close app                                 |
 
-
-
 根据 pytest 的[加载顺序](https://docs.pytest.org/en/latest/writing_plugins.html#plugin-discovery-order-at-tool-startup)，插件中定义的 fixture 是可以被 `conftest.py`和本地插件`pytest_plugins `覆盖的。也就是说，如果具体到项目时不满足需求，可以在`conftest.py`文件中，编写同名fixture，修改`scope`、`autoues`和其具体行为。
+
+#### 2.2 编写用例
+
+新建文件 `test_demo.py`，输入以下代码：
+
+```python
+#!/usr/bin/env python
+# encoding: utf-8
+from uiautomator2 import UIAutomatorServer
+
+
+def test_233(driver: UIAutomatorServer):
+    print(driver.device_info)
+```
+
+
+
+运行：
+
+```bash
+pipenv run python -m pytest
+```
+
+
 
 ## Issues
 
