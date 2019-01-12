@@ -51,20 +51,18 @@ brew install pipenv
 # windows,linux
 pip install --user pipenv
 
-pipenv install pytest-android       # 必须(自动安装依赖模块 pytest 和 pytest-variables)
-pipenv install uiautomator2>=0.1.7    # 必须，目前支持的驱动框架，后续可能还会添加 Appium 
-# 必须，pytest-variables支持的配置文件格式，二选一即可
-pipenv install PyYAML    # 推荐
-pipenv install hjson
-
+# 必须，根据您的配置文件格式，二选一（因为插件目前在 alpha 测试阶段，需要添加`--pre`参数）
+# 注意，pipenv在2018.11.26版本之后，才能支持额外（extras）模块（即安装时的中括号语法），所以使用较新的版本、或手动安装
+pipenv install --pre pytest-android[yaml]	# yaml 作为配置文件，推荐
+pipenv install --pre pytest-android[hjson]	# json 作为配置文件
 
 # 以下为可选模块，根据需要选择性安装
-pipenv install --dev weditor		# uiautomator2 配套的录制工具
-pipenv install allure-pytest pillow		# 使用 allure 生成报告
+pipenv install weditor		# uiautomator2 的录制工具
+pipenv install allure-pytest		# 使用 allure 生成报告
 pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 ```
 
-
+> 注意：根据最佳实践，pytest-android 作为 Package，不会也不应该对依赖的其他模块版本做限制，依赖关系应该放在 application 层来解决（这也恰好是 pipenv 等工具擅长的方向）。如果确实某些功能特性必须依赖其他模块的版本，可以给出提示。
 
 ## 使用
 
@@ -102,14 +100,14 @@ pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 
 此处文档可能更新不及时，通过执行命令`python -m pytest --fixtures`，可以列出所有 fixtures 及其最新说明文档。
 
-| Name           |  Scope   | Autouse | Description                                                  |
-| :------------- | :------: | :-----: | :----------------------------------------------------------- |
-| driver         | session  |  True   | 初始化设备 解锁、清理后台，设置驱动层参数和执行某些功能插件的注册 |
-| show_case_name | function |  True   | toast 提示显示用例描述或名字，便于了解进度                   |
-| app_start      | function |  True   | 启动 app ，（仅）通过当前 app 包名判断是否启动               |
-| app_stop       | function |  True   | 每条 case 结束自动 close app                                 |
+| Name           |  Scope   | Autouse | Description                                    |
+| :------------- | :------: | :-----: | :--------------------------------------------- |
+| driver         | session  |  True   | 初始化设备                                     |
+| show_case_name | function |  True   | toast 提示显示用例描述或名字，便于了解进度     |
+| app_start      | function |  True   | 启动 app ，（仅）通过当前 app 包名判断是否启动 |
+| app_stop       | function |  True   | 每条 case 结束自动 close app                   |
 
-根据 pytest 的[加载顺序](https://docs.pytest.org/en/latest/writing_plugins.html#plugin-discovery-order-at-tool-startup)，插件中定义的 fixture 是可以被 `conftest.py`和本地插件`pytest_plugins `覆盖的。也就是说，如果具体到项目时不满足需求，可以在`conftest.py`文件中，编写同名fixture，修改`scope`、`autoues`和其具体行为。
+根据 pytest 的[加载顺序](https://docs.pytest.org/en/latest/writing_plugins.html#plugin-discovery-order-at-tool-startup)，插件中定义的 fixture 是可以被 `conftest.py`和本地插件`pytest_plugins `覆盖的。也就是说，如果具体到项目时不满足需求，可以在`conftest.py`文件中，编写同名 fixture，修改`scope`、`autoues`和其具体行为。
 
 #### 2.2 编写用例
 
