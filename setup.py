@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -21,17 +21,14 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='~=3.6',
-    install_requires=['pytest', 'pytest-variables'],
+    install_requires=['pytest', 'pytest-variables', 'uiautomator2', 'pillow'],
     setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
     extras_require={
         'hjson': ['hjson'],
         'yaml': ['PyYAML'],
-        'pillow': ['pillow'],
-        'uiautomator2': ['uiautomator2'],
-        'allure-pytest': ['allure-pytest'],
-        'pytest-rerunfailures': ['pytest-rerunfailures'],
+        'allure': ['allure-pytest'],
+        'rerunfailures': ['pytest-rerunfailures'],
         'weditor': ['weditor'],
-
     },
     classifiers=[
         'Development Status :: 3 - Alpha',

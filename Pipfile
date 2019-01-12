@@ -4,12 +4,15 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-variables = "*"
+pillow = "*"
+uiautomator2 = "*"
 
 [packages]
 setuptools = "*"
 wheel = "*"
 twine = "*"
-pytest-android = {editable = true,path = "."}
 cookiecutter = "*"
 setuptools-scm = "*"
 setuptools-scm-git-archive = "*"

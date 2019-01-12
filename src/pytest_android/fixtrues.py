@@ -8,18 +8,26 @@
 """
 import time
 import json
-import pytest
 import logging
-import allure
+import pytest
 import uiautomator2
-from .hooks import click_marker, swipe_marker
+from .utils import click_marker, swipe_marker
+
+try:
+    import allure
+except ImportError:
+    logging.warning('allure not installed.')
+    allure = None
 # import for type hits
 from _pytest.fixtures import SubRequest
-from uiautomator2 import UIAutomatorServer, UiObjectNotFoundError
+from uiautomator2 import UIAutomatorServer
+
+# __all__ 只能影响`from xxx import *`的情况，直接导入不受影响
+__all__ = ['driver', 'show_case_name', 'app_start', 'app_stop']
 
 
 @pytest.fixture(scope='session', autouse=True)
-def driver(variables) -> UIAutomatorServer:
+def driver(variables: dict) -> UIAutomatorServer:
     """初始化设备
     解锁、清理后台，设置驱动层参数和执行某些功能插件的注册"""
 
@@ -41,22 +49,24 @@ def driver(variables) -> UIAutomatorServer:
 
     d.app_stop_all()  # 清理操作
     d.watchers.remove()  # 移除 watchers
-    d.screen_on()
 
     def _screenshot(stage, func_name, args, kwargs, ret):
         if stage == 'before':
             if 'click' in func_name:
                 logging.info(f'[{func_name}] ({args[0]},{args[1]})')
                 im = d.screenshot()
-                allure.attach(click_marker(im, *args), f'{func_name}: ({args[0]},{args[1]})',
-                              allure.attachment_type.JPG)
+                if allure:
+                    allure.attach(click_marker(im, *args), f'{func_name}: ({args[0]},{args[1]})',
+                                  allure.attachment_type.JPG)
             elif 'swipe' in func_name:
                 logging.info(f'[{func_name}] from: ({args[0]},{args[1]}), to ({args[2]},{args[3]})')
                 im = d.screenshot()
-                allure.attach(swipe_marker(im, *args), f'{func_name}: ({args[0]},{args[1]}) to ({args[2]},{args[3]})',
-                              allure.attachment_type.JPG)
+                if allure:
+                    allure.attach(swipe_marker(im, *args),
+                                  f'{func_name}: ({args[0]},{args[1]}) to ({args[2]},{args[3]})',
+                                  allure.attachment_type.JPG)
 
-    if variables.get('uiautomator2').get('auto_screenshot'):
+    if variables.get('uiautomator2', {}).get('auto_screenshot', None):
         d.hooks_register(_screenshot)
 
     # 此处可以添加一些全局初始化设置
@@ -74,15 +84,14 @@ def driver(variables) -> UIAutomatorServer:
 
 @pytest.fixture(scope='function', autouse=True)
 def show_case_name(request: SubRequest, driver: UIAutomatorServer) -> None:
-    """toast提示显示用例描述或名字，便于了解进度
-    """
+    """toast提示显示用例描述或名字，便于了解进度"""
     # 因为要照顾pytest.mark.parametrize生成的多条case，所以这里用node的name
     logging.info(f'case name: {request.node.name}')
     driver.toast.show(request.node.name, 3)  # toast提示显示2秒
 
 
 @pytest.fixture(scope='function', autouse=True)
-def app_start(variables, driver: UIAutomatorServer, show_case_name: None) -> bool:
+def app_start(variables: dict, driver: UIAutomatorServer, show_case_name: None) -> bool:
     """启动app，（仅）通过当前 app 包名判断是否启动"""
     package_name = variables.get('package_name')
     activity = variables.get('MainActivity', None)
@@ -99,7 +108,7 @@ def app_start(variables, driver: UIAutomatorServer, show_case_name: None) -> boo
 
 
 @pytest.fixture(scope='function', autouse=True)
-def app_stop(request: SubRequest, variables, driver: UIAutomatorServer) -> None:
+def app_stop(request: SubRequest, variables: dict, driver: UIAutomatorServer) -> None:
     """每条case结束自动close app"""
 
     def _close():
