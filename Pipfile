@@ -16,6 +16,10 @@ twine = "*"
 cookiecutter = "*"
 setuptools-scm = "*"
 setuptools-scm-git-archive = "*"
+uiautomator2 = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true

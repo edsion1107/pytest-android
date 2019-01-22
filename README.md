@@ -2,13 +2,35 @@
 
 ![PyPI version](https://img.shields.io/pypi/v/pytest-android.svg) ![Python versions](https://img.shields.io/pypi/pyversions/pytest-android.svg) ![See Build Status on Travis CI](https://travis-ci.org/edsion1107/pytest-android.svg?branch=master)
 
-[TOC]
-
 pytest-android is a plugin for [pytest](http://pytest.org/) that provides a configured 'driver' for Android Automated Testing, using [uiautomator2](https://github.com/openatx/uiautomator2).
 
 pytest-android 是 [pytest](http://pytest.org/) 的插件，它通过 [uiautomator2](https://github.com/openatx/uiautomator2) 为 Android 自动化测试提供“驱动”。
 
-## 功能
+
+
+目录
+=================
+
+   * [pytest-android](#pytest-android)
+   * [目录](#目录)
+      * [主要功能](#主要功能)
+      * [安装](#安装)
+         * [1. 安装 python](#1-安装-python)
+         * [2. 创建工程](#2-创建工程)
+         * [3. 安装插件和一些可选模块](#3-安装插件和一些可选模块)
+      * [使用](#使用)
+         * [1. 创建配置文件](#1-创建配置文件)
+            * [1.1 config.yaml](#11-configyaml)
+            * [1.2 pytest.ini](#12-pytestini)
+         * [2. 编写用例](#2-编写用例)
+            * [2.1 可用的Fixtures](#21-可用的fixtures)
+            * [2.2 编写用例](#22-编写用例)
+      * [Issues](#issues)
+      * [贡献代码](#贡献代码)
+      * [License](#license)
+
+
+## 主要功能
 
 - 整合 [uiautomator2](https://github.com/openatx/uiautomator2)，实现基于控件的自动化测试
 - 依赖 [pytest-variables](https://github.com/pytest-dev/pytest-variables) 实现参数化配置
@@ -28,7 +50,7 @@ pytest-android 是 [pytest](http://pytest.org/) 的插件，它通过 [uiautomat
 
 ### 1. 安装 python
 
-macOS、linux可以通过 [pyenv](https://github.com/pyenv/pyenv) 实现多个 python 版本的共存和切换，Windows上需要下载可执行文件、手动安装和配置环境变量。
+macOS、linux可以通过 [pyenv](https://github.com/pyenv/pyenv) 实现多个 python 版本的共存和切换，Windows上需要下载可执行文件、手动安装和配置环境变量。
 
 > 因为使用了 python 3.6 的 [f-string](https://realpython.com/python-f-strings/) 特性，所以建议的 python 版本大于等于3.6。
 
@@ -61,8 +83,9 @@ pipenv install weditor		# uiautomator2 的录制工具
 pipenv install allure-pytest		# 使用 allure 生成报告
 pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 ```
+> PS: pip版本大于等于18时，pipenv需要的最低版本为2018.11.26（如果低于此版本会导致一系列错误）
 
-> 注意：根据最佳实践，pytest-android 作为 Package，不会也不应该对依赖的其他模块版本做限制，依赖关系应该放在 application 层来解决（这也恰好是 pipenv 等工具擅长的方向）。如果确实某些功能特性必须依赖其他模块的版本，可以给出提示。
+> 注意：根据[这里的观点](https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setup-py)，pytest-android 作为 **libraries**，将部署到某个特定的环境中，然后才能使所有依赖项和子依赖项的确切版本具体化。0
 
 ## 使用
 
@@ -98,7 +121,7 @@ pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 
 #### 2.1 可用的Fixtures
 
-此处文档可能更新不及时，通过执行命令`python -m pytest --fixtures`，可以列出所有 fixtures 及其最新说明文档。
+此处文档可能更新不及时，通过执行命令`python -m pytest --fixtures`，可以列出所有 fixtures 及其最新说明文档。
 
 | Name           |  Scope   | Autouse | Description                                    |
 | :------------- | :------: | :-----: | :--------------------------------------------- |

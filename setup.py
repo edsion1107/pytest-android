@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from pathlib import Path
 from setuptools import setup
 
-with open("README.md", "r") as fh:
+with open(Path(__file__).parent / "README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
