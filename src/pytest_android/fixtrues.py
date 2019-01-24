@@ -116,7 +116,7 @@ def app_start(variables: dict, driver: UIAutomatorServer, show_case_name: None) 
     package_name = variables.get('package_name')
     activity = variables.get('MainActivity', None)
     res = driver.shell(f'pm path {package_name}')
-    if res[-1] == 1:
+    if res.exit_code != 0:
         logging.error(f'{package_name} not installed.')
         pytest.fail(f'{package_name} not installed.', pytrace=False)
     logging.info(f'start app: {package_name}, activity: {activity}')
