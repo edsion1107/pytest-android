@@ -29,7 +29,6 @@ pytest-android 是 [pytest](http://pytest.org/) 的插件，它通过 [uiautomat
       * [贡献代码](#贡献代码)
       * [License](#license)
 
-
 ## 主要功能
 
 - 整合 [uiautomator2](https://github.com/openatx/uiautomator2)，实现基于控件的自动化测试
@@ -158,11 +157,9 @@ pipenv run python -m pytest
 
 ## Issues
 
-如果插件使用中遇到问题，请通过 github issues 提交。
+如果插件使用中遇到问题，请通过 [github issues](https://github.com/edsion1107/pytest-android/issues) 提交。
 
-## 贡献代码
 
-Contributions are very welcome. 
 
 ## License
 

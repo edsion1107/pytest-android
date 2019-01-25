@@ -21,8 +21,9 @@ try:
 except ImportError:
     logging.warning('allure not installed.')
     allure = None
-# import for type hits
+# import for type hints
 from _pytest.fixtures import SubRequest
+from _pytest.config import Config
 from uiautomator2 import UIAutomatorServer
 
 # __all__ 只能影响`from xxx import *`的情况，直接导入不受影响
@@ -30,7 +31,7 @@ __all__ = ['driver', 'uiautomator2_hook', 'show_case_name', 'app_start', 'app_st
 
 
 @pytest.fixture(scope='session', autouse=True)
-def driver(variables: dict) -> UIAutomatorServer:
+def driver(pytestconfig: Config, variables: dict) -> UIAutomatorServer:
     """初始化设备
     1. 连接设备。(配置文件中)需要指定`device`节点，至少包括`serial`（有线）和`addr`（无线）其中一个。有线连接比无线优先级高；
 不存在`serial`时，直接使用无线连接；通过`serial`连接设备失败时，自动使用`addr`重连；`serial`值为空，自动连接当前唯一的设备
@@ -48,8 +49,16 @@ def driver(variables: dict) -> UIAutomatorServer:
     logging.info('尝试通过USB连接设备')
     adb = AdbClient()
     if 'serial' in device_conf:
-        if adb.device(device_conf.get('serial')) or device_conf.get('serial') is None:  # 配置了serial参数并且通过adb能检测到，usb直连
-            d = uiautomator2.connect_usb(device_conf.get('serial'))
+        # 配置了serial参数并且通过adb能检测到，才usb直连
+        if adb.device(device_conf.get('serial')) or device_conf.get('serial') is None:
+            try:
+                d = uiautomator2.connect_usb(device_conf.get('serial'))
+            except RuntimeError:
+                logging.info(f"配置文件：{pytestconfig.option.variables}")
+                logging.error(f'检测到多台设备，但未通过配置文件指定其中一个\n'
+                              f'请断开其他或修改配置文件:{pytestconfig.option.variables}')
+                pytest.fail(f'检测到多台设备，但未通过配置文件指定其中一个\n'
+                            f'请断开其他或修改配置文件:{pytestconfig.option.variables}', pytrace=False)
         else:
             logging.warning('尝试通过WI-FI（网络）连接设备')  # 其他情况走ip连接
             d = uiautomator2.connect_wifi(device_conf.get('addr'))
