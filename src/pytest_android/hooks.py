@@ -6,14 +6,12 @@
 @file: hooks.py
 @time: 2019-01-03 17:25
 """
-import logging
 from uiautomator2 import UIAutomatorServer, UiObjectNotFoundError
 
 try:
     import allure
 except ImportError:
-    logging.warning('allure not installed.')
-    allure = None
+    pass
 
 
 def pytest_exception_interact(node, call, report):

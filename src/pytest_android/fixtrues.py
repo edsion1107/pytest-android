@@ -19,15 +19,14 @@ from .utils import click_marker, swipe_marker
 try:
     import allure
 except ImportError:
-    logging.warning('allure not installed.')
-    allure = None
+    pass
 # import for type hints
 from _pytest.fixtures import SubRequest
 from _pytest.config import Config
 from uiautomator2 import UIAutomatorServer
 
 # __all__ 只能影响`from xxx import *`的情况，直接导入不受影响
-__all__ = ['driver', 'uiautomator2_hook', 'show_case_name', 'app_start', 'app_stop']
+__all__ = ['driver', 'uiautomator2_hook', 'show_case_name', 'app_start']
 
 
 @pytest.fixture(scope='session', autouse=True)

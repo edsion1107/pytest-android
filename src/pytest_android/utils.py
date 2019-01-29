@@ -8,8 +8,11 @@
 """
 import base64
 from io import BytesIO
-from PIL import Image, ImageDraw
 
+try:
+    from PIL import Image, ImageDraw
+except ImportError:
+    pass
 MARKER_RESIZE = 1 / 12  # 图标（水印）相对于截图的大小
 MARKER_OFFSET_X = 1 / 4  # X轴图标（水印）坐标修正比例
 MARKER_OFFSET_Y = 1 / 4  # Y轴图标（水印）坐标修正比例
