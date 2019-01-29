@@ -121,7 +121,8 @@ def show_case_name(request: SubRequest, driver: UIAutomatorServer) -> None:
 
 @pytest.fixture(scope='function', autouse=True)
 def app_start(variables: dict, driver: UIAutomatorServer, show_case_name: None) -> bool:
-    """启动app，（仅）通过当前 app 包名判断是否启动"""
+    """用例执行前启动 app，完成后强行停止该 app。启动时（仅）通过当前 app 包名判断是否启动"""
+    # 依赖 show_case_name 是为了保证 fixture 执行顺序
     package_name = variables.get('package_name')
     activity = variables.get('MainActivity', None)
     res = driver.shell(f'pm path {package_name}')
@@ -136,18 +137,12 @@ def app_start(variables: dict, driver: UIAutomatorServer, show_case_name: None) 
     while time.time() - start < 30:
         res = driver.current_app()  # https://github.com/openatx/uiautomator2/issues/200
         if res.get('package') == package_name:
-            return True
-    return False
+            success = True
+            break
+    else:
+        success = False
+    yield success
+    logging.info(f'stop app: {package_name}')
+    driver.app_stop(package_name)
+    time.sleep(1)
 
-
-@pytest.fixture(scope='function', autouse=True)
-def app_stop(request: SubRequest, variables: dict, driver: UIAutomatorServer) -> None:
-    """每条case结束自动close app"""
-
-    def _close():
-        package_name = variables.get('package_name')
-        logging.info(f'stop app: {package_name}')
-        driver.app_stop(package_name)
-        time.sleep(1)
-
-    request.addfinalizer(_close)
