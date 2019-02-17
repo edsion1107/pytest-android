@@ -11,23 +11,22 @@ pytest-android 是 [pytest](http://pytest.org/) 的插件，它通过 [uiautomat
 目录
 =================
 
-   * [pytest-android](#pytest-android)
-   * [目录](#目录)
-      * [主要功能](#主要功能)
-      * [安装](#安装)
-         * [1. 安装 python](#1-安装-python)
-         * [2. 创建工程](#2-创建工程)
-         * [3. 安装插件和一些可选模块](#3-安装插件和一些可选模块)
-      * [使用](#使用)
-         * [1. 创建配置文件](#1-创建配置文件)
-            * [1.1 config.yaml](#11-configyaml)
-            * [1.2 pytest.ini](#12-pytestini)
-         * [2. 编写用例](#2-编写用例)
-            * [2.1 可用的Fixtures](#21-可用的fixtures)
-            * [2.2 编写用例](#22-编写用例)
-      * [Issues](#issues)
-      * [贡献代码](#贡献代码)
-      * [License](#license)
+* [pytest-android](#pytest-android)
+* [目录](#目录)
+ * [主要功能](#主要功能)
+ * [安装](#安装)
+    * [1. 安装 python](#1-安装-python)
+    * [2. 创建工程](#2-创建工程)
+    * [3. 安装插件和一些可选模块](#3-安装插件和一些可选模块)
+ * [使用](#使用)
+    * [1. 创建配置文件](#1-创建配置文件)
+       * [1.1 创建配置文件 config.yaml 和 pytest.ini](#11-创建配置文件-configyaml-和-pytestini)
+       * [1.2 根据需求调整配置[可选]](#12-根据需求调整配置可选)
+    * [2. 编写用例](#2-编写用例)
+       * [2.1 可用的Fixtures](#21-可用的fixtures)
+       * [2.2 编写用例](#22-编写用例)
+ * [Issues](#issues)
+ * [License](#license)
 
 ## 主要功能
 
@@ -84,27 +83,54 @@ pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 ```
 > PS: pip版本大于等于18时，pipenv需要的最低版本为2018.11.26（如果低于此版本会导致一系列错误）
 
-> 注意：根据[这里的观点](https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setup-py)，pytest-android 作为 **libraries**，将部署到某个特定的环境中，然后才能使所有依赖项和子依赖项的确切版本具体化。0
+> 注意：根据[这里的观点](https://pipenv.readthedocs.io/en/latest/advanced/#pipfile-vs-setup-py)，pytest-android 作为 **libraries**，将部署到某个特定的环境中，然后才能使所有依赖项和子依赖项的确切版本具体化。
 
 ## 使用
 
 ### 1. 创建配置文件
 
-#### 1.1 config.yaml
+#### ~~1.1 config.yaml~~
 
-创建项目级配置文件，参考 [config.yaml](https://raw.githubusercontent.com/edsion1107/pytest-android/master/config.yaml)。此文件可以使用 yaml 和 hjson 格式（由 pytest-variables 插件实现），文件名任意。
+~~创建项目级配置文件，参考 [config.yaml](https://raw.githubusercontent.com/edsion1107/pytest-android/master/config.yaml)。此文件可以使用 yaml 和 hjson 格式（由 pytest-variables 插件实现），文件名任意。~~
 
-配置文件可以同时指定多个（遇到相同字段，后面的会覆盖前面的），借助此功能可以实现：指定设备参数、实现复杂情况下的兼容性测试等。
+~~配置文件可以同时指定多个（遇到相同字段，后面的会覆盖前面的），借助此功能可以实现：指定设备参数、实现复杂情况下的兼容性测试等。~~
 
-#### 1.2 pytest.ini
+#### ~~1.2 pytest.ini~~
 
-创建 pytest 的配置文件，参考[文档](https://docs.pytest.org/en/latest/reference.html#configuration-options)进行基础配置。
+~~创建 pytest 的配置文件，参考[文档](https://docs.pytest.org/en/latest/reference.html#configuration-options)进行基础配置。~~
 
-添加`addopts = --variables config.yaml`，指定项目配置文件。
+~~添加`addopts = --variables config.yaml`，指定项目配置文件。~~
+
+#### 1.1 创建配置文件 config.yaml 和 pytest.ini
+
+项目配置文件 config.yaml，pytest 配置文件 pytest.ini ，区别：
+
+pytest.ini 只能有一个，且文件名不可修改；
+
+config.yaml 可以有多个（通过 pytest-variables 插件实现，需在pytest.ini 中指定），文件名任意，并且可以同时载入多个文件（遇到重复字段时，最后一个生效）。
+
+通过配置文件，可以对测试进行参数化配置，提高测试的灵活性，降低代码维护的工作量，和减少可能的疏忽导致的异常。
+
+目前已实现命令行工具，可以直接执行命令下载对应的配置文件示例：
+
+```bash
+pipenv run python -m pytest_android download --init
+```
+
+如果已经手动创建，或者想重新下载指定的文件，可以附加对应的参数：
+
+```bash
+pipenv run python -m pytest_android download --pytest.ini
+pipenv run python -m pytest_android download --config.yaml
+```
 
 
 
-[可选]
+> 当本地文件与示例文件不一致时，会提示是否覆盖，可以选择N然后手动合并。
+
+
+
+#### 1.2 根据需求调整配置[可选]
 
 如果使用 allure 生成报告，并安装了对应依赖，可以通过`--alluredir`指定报告的路径，通过`--clean-alluredir`指定开始前是否清理历史数据。更多参数可参考[插件文档](https://docs.qameta.io/allure/#_pytest)
 
@@ -113,8 +139,6 @@ pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 其他诸如 log 、markers，和第三方插件配置，根据需要参考对应文档。
 
 
-
-这里是一份 [pytest.ini](https://raw.githubusercontent.com/edsion1107/pytest-android/master/pytest.ini) 的示例。
 
 ### 2. 编写用例
 
@@ -127,9 +151,10 @@ pipenv install pytest-rerunfailures		# 使 pytest 支持失败重试
 | driver         | session  |  True   | 初始化设备                                     |
 | show_case_name | function |  True   | toast 提示显示用例描述或名字，便于了解进度     |
 | app_start      | function |  True   | 启动 app ，（仅）通过当前 app 包名判断是否启动 |
-| app_stop       | function |  True   | 每条 case 结束自动 close app                   |
 
-根据 pytest 的[加载顺序](https://docs.pytest.org/en/latest/writing_plugins.html#plugin-discovery-order-at-tool-startup)，插件中定义的 fixture 是可以被 `conftest.py`和本地插件`pytest_plugins `覆盖的。也就是说，如果具体到项目时不满足需求，可以在`conftest.py`文件中，编写同名 fixture，修改`scope`、`autoues`和其具体行为。
+根据 pytest 的[加载顺序](https://docs.pytest.org/en/latest/writing_plugins.html#plugin-discovery-order-at-tool-startup)，插件中定义的 fixture 是可以被 `conftest.py`和本地插件`pytest_plugins `覆盖的。也就是说，如果具体到项目时不满足需求，可以在工程内新建`conftest.py`文件，编写同名 fixture，修改`scope`、`autoues`和其具体行为。
+
+
 
 #### 2.2 编写用例
 

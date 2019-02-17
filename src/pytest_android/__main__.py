@@ -194,7 +194,6 @@ def main():
     os.environ['HTTP_PROXY'] = args.proxy
     os.environ['HTTPS_PROXY'] = args.proxy
 
-    print(args)
     if args.subparser_name == 'download':
         args = vars(args)
         if args.get('init'):
