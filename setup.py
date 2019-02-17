@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='~=3.6',
-    install_requires=['pytest', 'pytest-variables', 'uiautomator2'],
+    install_requires=['pytest', 'pytest-variables', 'progressbar2', 'requests_download', 'retry', 'uiautomator2', ],
     setup_requires=['setuptools_scm', 'setuptools_scm_git_archive'],
     extras_require={
         'hjson': ['hjson'],

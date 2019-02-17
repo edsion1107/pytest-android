@@ -17,9 +17,12 @@ cookiecutter = "*"
 setuptools-scm = "*"
 setuptools-scm-git-archive = "*"
 uiautomator2 = "*"
+requests-download = "*"
+retry = "*"
+progressbar2 = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
 
 [pipenv]
 allow_prereleases = true
