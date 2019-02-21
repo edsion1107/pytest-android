@@ -13,6 +13,7 @@ import zipfile
 import argparse
 import shutil
 import platform
+import webbrowser
 from requests.exceptions import ConnectionError, ConnectTimeout
 from retry import retry
 from pathlib import Path
@@ -32,7 +33,7 @@ if not BASE_DIR.exists():
 PYTEST = {'url': 'https://raw.githubusercontent.com/edsion1107/pytest-android/master/pytest.ini',
           'hash': '062fc3979aca4f6b3099f1c78b5766535d1a877bd17679c2c4fad32c3212def1', 'hash_func': hashlib.sha256}
 CONFIG = {'url': 'https://raw.githubusercontent.com/edsion1107/pytest-android/master/config.yaml',
-          'hash': '62cd79262379b852c22f1ec81235f3b1e71a50cbd67b37d56f4bdd7597e66fa2', 'hash_func': hashlib.sha256}
+          'hash': '2cb2166d8ebe1b640b5ab15383deef7a300c68505880e558c0b30ef54a739a84', 'hash_func': hashlib.sha256}
 
 UIAUTOMATOR2 = [
     {'url': 'https://github.com/openatx/android-uiautomator-server/releases/download/%s/app-uiautomator.apk',
@@ -156,10 +157,20 @@ def download_cmd(args: dict):
             print('warning: 未提供预编译版本，请参考项目主页（https://github.com/Genymobile/scrcpy），手动编译')
 
 
-def cleanup_cmd(args):
+def cleanup_cmd(args: argparse.Namespace):
     shutil.rmtree(BASE_DIR, ignore_errors=True)
     if args.all:
         shutil.rmtree(u2_appdir, ignore_errors=True)
+
+
+def auth_cmd(args: argparse.Namespace):
+    if args.wework:
+        print('请扫描浏览器中展示的二维码，授权后 token 会自动发送到你的企业微信中')
+        webbrowser.open('https://wecar.i1hao.com/wework/qr_connect', new=1)
+    elif args.serverchan:
+        print('请按照浏览器中的指引，github 授权和绑定微信公众号，即可在网页上找到"SCKEY"(token)')
+        print('注意：serverchan 的消息推送频率有限制，具体以页面显示为准')
+        webbrowser.open('https://sc.ftqq.com', new=1)
 
 
 def main():
@@ -171,7 +182,7 @@ def main():
                         help='HTTP代理（被墙、内网等情况下使用）')
     subparsers = parser.add_subparsers(dest="subparser_name")
 
-    d = subparsers.add_parser('download', aliases='d', help='下载配置文件（示例）、外部依赖')
+    d = subparsers.add_parser('download', help='下载配置文件（示例）、外部依赖')
     d.add_argument('-F', '--force', action='store_true', required=False, default=False,
                    help='删除本地缓存，再执行下载')
     d.add_argument('--pytest.ini', action='store_true', default=False,
@@ -185,8 +196,12 @@ def main():
     d.add_argument('--init', action='store_const', const=['pytest.ini', 'config.yaml'],
                    help='init %(const)s')
 
-    c = subparsers.add_parser('clean', aliases='c', help='清理下载缓存')
+    c = subparsers.add_parser('clean', help='清理下载缓存')
     c.add_argument('--all', action='store_true', help='清除所有（包括uiautomator2）')
+
+    a = subparsers.add_parser('authentication', help='用户认证（使用后端 api ）')
+    a.add_argument('--wework', action='store_true', default=False, help='企业微信认证（需管理员开通此服务）')
+    a.add_argument('--serverchan', action='store_true', default=False, help='ServerChan认证')
 
     args = parser.parse_args()
 
@@ -202,6 +217,9 @@ def main():
         download_cmd(args)
     elif args.subparser_name == 'clean':
         cleanup_cmd(args)
+
+    elif args.subparser_name == 'authentication':
+        auth_cmd(args)
 
 
 if __name__ == '__main__':

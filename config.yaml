@@ -16,6 +16,14 @@ uiautomator2: # https://github.com/openatx/uiautomator2#global-settings
   #    waitForSelectorTimeout: 0
   auto_screenshot: true
 
+# 通知设置（仅支持推送给自己）
+notify:
+  # 后端，目前支持 wework（企业微信，需要二次开发）、serverchan（Server酱——微信公众号）
+  backend: serverchan
+  # 用于验证身份的 token 或 sckey 参数（必须）
+  token:
+  # 推送地址（仅企业微信有效）
+  url:
 
 # 启动时使用的包名
 package_name: com.tencent.qqmusic

@@ -12,6 +12,7 @@ import logging
 import pytest
 import requests
 import uiautomator2
+from requests.adapters import HTTPAdapter
 from uiautomator2.adbutils import AdbClient
 from requests.exceptions import ConnectTimeout, ConnectionError
 from .utils import click_marker, swipe_marker
@@ -145,3 +146,28 @@ def app_start(variables: dict, driver: UIAutomatorServer, show_case_name: None) 
     driver.app_stop(package_name)
     time.sleep(1)
 
+
+@pytest.fixture
+def notify(variables: dict):
+    s = requests.session()
+    s.mount('https://', HTTPAdapter(max_retries=3))
+    token = variables.get('notify').get('token')
+    if variables.get('notify').get('backend') == 'serverchan':
+        url = f'https://sc.ftqq.com/{token}.send'
+
+        def _notify(content: str) -> requests.Response:
+            r = s.post(url, data={'text': content})
+            logging.debug(r.text)
+            assert r.status_code == 200
+            assert r.json().get('errno') == 0
+            return r
+    else:
+        url = variables.get('notify').get('url')
+        s.headers.update({'Authorization': f'Token {token}'})
+
+        def _notify(content: str) -> requests.Response:
+            r = s.post(url, json={'content': content})
+            logging.debug(r.text)
+            assert r.status_code == 201
+            return r
+    return _notify
