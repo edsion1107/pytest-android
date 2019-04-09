@@ -1,4 +1,11 @@
+# PLEASE NOTE, THIS PROJECT IS NO LONGER BEING MAINTAINED
+# 注意：本项目已不再更新。因为重度依赖[uiautomator2](https://github.com/openatx/uiautomator2)，只能实现 android 原生控件级别的测试，对于 H5、小程序等场景存在一些无法解决的困难。待重新实现"driver"后，再重启此项目。
+
 # pytest-android
+
+
+
+
 
 ![PyPI version](https://img.shields.io/pypi/v/pytest-android.svg) ![Python versions](https://img.shields.io/pypi/pyversions/pytest-android.svg) ![See Build Status on Travis CI](https://travis-ci.org/edsion1107/pytest-android.svg?branch=master)
 
